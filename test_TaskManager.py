@@ -86,3 +86,13 @@ def test_parseInValidCommand() :
     inputMinus = "o Learn C++"
     action = taskManager.parseCommand(inputMinus)
     assert action is False
+
+def test_createTask() :
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input = "+ Finish my book"
+    action = taskManager.parseCommand(input)
+    assert action.type == "add"
+    if (action.type == "add") :
+        task = taskManager.createTask(nbTask,action)
+        assert task.title == "Finish my book"

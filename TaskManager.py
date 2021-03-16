@@ -1,4 +1,5 @@
 import Action
+import Task
 
 class TaskManager:
     def __init__(self, tasks):
@@ -49,3 +50,5 @@ class TaskManager:
         else:
             return False
 
+    def createTask(self,id,action):
+        return Task.Task(id,action.title)

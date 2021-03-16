@@ -1,10 +1,10 @@
 class Task:
 
     # Function create Task
-    def __init__(self,id,title,status):
+    def __init__(self,id,title):
         self.id = id
         self.title = title
-        self.status = status
+        self.status = None
 
     # Function change status to "Done"
     def changeStatusToDone(self):
