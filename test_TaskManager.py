@@ -144,6 +144,24 @@ def test_UpdateTaskToDo() :
         taskManager.changeTaskStatusToDo(task.id)
         assert task.status == "toDo"
 
+def test_printTaskList() :
+    # Pour simplifier le test nous allons créés plusieurs tâches
+    # qui seront toujours correctement déclarées par l'utilisateur
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input_1 = "+ Task one"
+    action_1 = taskManager.parseCommand(input_1)
+    task_1 = taskManager.createTask(nbTask, action_1)
+    assert len(taskManager.tasks) == 1 and taskManager.tasks[0] == task_1
+    input_2 = "+ Task two"
+    action_2 = taskManager.parseCommand(input_2)
+    nbTask = len(taskManager.tasks)
+    task_2 = taskManager.createTask(nbTask, action_2)
+    assert len(taskManager.tasks) == 2 and taskManager.tasks[1] == task_2
+    taskManager.changeTaskStatusToDone(task_1.id)
+    assert task_1.status == "Done"
+    taskManager.changeTaskStatusToDone(task_2.id)
+    assert task_2.status == "Done"
 
 
 

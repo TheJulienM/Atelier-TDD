@@ -51,21 +51,21 @@ class TaskManager:
             return False
 
     def createTask(self,id,action):
-        if id == 0 :
-            task = Task.Task(id,action.title)
-            (self.tasks).append(task)
-            return task
-        else:
-            task = Task.Task(id+1, action.title)
-            self.tasks.append(task)
-            return task
+        task = Task.Task(id,action.title)
+        (self.tasks).append(task)
+        print(self.tasks)
+        return task
+
 
     def deleteTask(self,id):
         self.tasks.pop(id)
+        print(self.tasks)
 
     def changeTaskStatusToDone(self,id):
         task = self.tasks[id]
         task.changeStatusToDone()
+        task.status = "Done"
+        print(self.tasks)
         # task.status = "Done"
         # Les deux fonctionnent mais j'avais envie
         # de faire une petite méthode dans ma class Task je la trouvais un peu vide
@@ -73,4 +73,5 @@ class TaskManager:
     def changeTaskStatusToDo(self,id):
         task = self.tasks[id]
         task.changeStatusToDo()
+        print(self.tasks)
 
