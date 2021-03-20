@@ -87,7 +87,7 @@ def test_parseInValidCommand() :
     action = taskManager.parseCommand(inputMinus)
     assert action is False
 
-def test_createTask() :
+def test_createAddTask() :
     taskManager = TaskManager.TaskManager([])
     nbTask = len(taskManager.tasks)
     input = "+ Finish my book"
@@ -95,4 +95,25 @@ def test_createTask() :
     assert action.type == "add"
     if (action.type == "add") :
         task = taskManager.createTask(nbTask,action)
+        assert task.id == 0
         assert task.title == "Finish my book"
+        assert taskManager.tasks[task.id] == task
+        assert len(taskManager.tasks) == 1
+
+def test_deleteTask() :
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input = "+ Make a backup of my VPS"
+    action = taskManager.parseCommand(input)
+    assert action.type == "add"
+    if (action.type == "add") :
+        task = taskManager.createTask(nbTask,action)
+        assert task.id == 0
+        assert task.title == "Make a backup of my VPS"
+        assert taskManager.tasks[task.id] == task
+        print(taskManager.tasks[task.id])
+        taskManager.deleteTask(0)
+        assert len(taskManager.tasks) == 0
+
+
+

@@ -51,4 +51,14 @@ class TaskManager:
             return False
 
     def createTask(self,id,action):
-        return Task.Task(id,action.title)
+        if id == 0 :
+            task = Task.Task(id,action.title)
+            (self.tasks).append(task)
+            return task
+        else:
+            task = Task.Task(id+1, action.title)
+            self.tasks.append(task)
+            return task
+
+    def deleteTask(self,id):
+        self.tasks.pop(id)
