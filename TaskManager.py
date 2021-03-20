@@ -1,6 +1,14 @@
 import Action
 import Task
 
+import sqlite3
+import os.path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "database.db")
+
+with sqlite3.connect(db_path) as conn:
+    cur = conn.cursor()
+
 class TaskManager:
     def __init__(self, tasks):
         self.tasks = tasks
@@ -75,3 +83,19 @@ class TaskManager:
         task.changeStatusToDo()
         print(self.tasks)
 
+    def InsertTaskDatabase(self,id,title,status):
+        cur.execute("INSERT INTO task(id,title,status) VALUES (?,?,?)", (id,title,status))
+
+        conn.commit()
+
+    def UpdateTaskDatabase(self,id,title,status):
+        cur.execute("UPDATE task SET title = ?, status = ? WHERE id = ?", (title,status,id))
+        conn.commit()
+
+    def getTaskFromDatabase(self):
+        tasksData = cur.execute("SELECT * FROM task")
+        tasksData = tasksData.fetchall()
+        for taskRow in tasksData:
+            task = Task.Task(taskRow[0], taskRow[1])
+            task.status = taskRow[2]
+            self.tasks.append(task)

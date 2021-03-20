@@ -1,6 +1,13 @@
 import TaskManager
 import Task
 import Action
+import sqlite3
+import os.path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "database.db")
+
+with sqlite3.connect(db_path) as conn:
+    cur = conn.cursor()
 
 def test_createTaskWithTaskManagerWithNoTask() :
     taskManager = TaskManager.TaskManager([])
@@ -162,6 +169,59 @@ def test_printTaskList() :
     assert task_1.status == "Done"
     taskManager.changeTaskStatusToDone(task_2.id)
     assert task_2.status == "Done"
+
+# Information :
+# Par soucis de temps les Task créées dans les tests précédents ne sont pas
+# enregitrées dans la base, seulement les prochaines le seront.
+def test_TaskAndDatabase() :
+    # On vide la table task de la base de données
+    cur.execute("DELETE FROM task")
+    conn.commit()
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input = "+ Upload this task to database"
+    action = taskManager.parseCommand(input)
+    task = taskManager.createTask(nbTask, action)
+    assert task.id == 0
+    assert task.title == "Upload this task to database"
+    assert taskManager.tasks[task.id] == task
+    taskManager.InsertTaskDatabase(task.id,task.title,task.status)
+    assert len(taskManager.tasks) == 1
+    idData = cur.execute("SELECT id FROM task WHERE id = 0")
+    assert (idData.fetchone())[:][0] == task.id
+    titleData = cur.execute("SELECT title FROM task where id = ?", (task.id,))
+    assert (titleData.fetchone())[:][0] == task.title
+    statusData = cur.execute("SELECT status FROM task where id = ?", (task.id,))
+    assert (statusData.fetchone())[:][0] == task.status
+    taskManager.changeTaskStatusToDo(task.id)
+    assert task.status == "toDo"
+    taskManager.UpdateTaskDatabase(task.id,task.title,task.status)
+    idData = cur.execute("SELECT id FROM task where id = ?", (task.id,))
+    assert (idData.fetchone())[:][0] == task.id
+    titleData = cur.execute("SELECT title FROM task where id = ?", (task.id,))
+    assert (titleData.fetchone())[:][0] == task.title
+    statusData = cur.execute("SELECT status FROM task where id = ?", (task.id,))
+    assert (statusData.fetchone())[:][0] == task.status
+    conn.commit()
+
+    assert len(taskManager.tasks) == 1
+
+    # On imagine une déconnexion de l'utilisateur, la liste local est donc vidée pour simuler un relancement du programme
+    taskManager.tasks = []
+    assert len(taskManager.tasks) == 0
+    taskManager.getTaskFromDatabase()
+    assert len(taskManager.tasks) != 0
+    task = taskManager.tasks[0]
+    assert task.id == 0
+    assert task.title == "Upload this task to database"
+    assert task.status == "toDo"
+
+    # On vide la table task de la base de données
+    # Bien sûr on imagine qu'on aurait une base pour les tests afin de ne pas
+    # supprimer les données en production
+    cur.execute("DELETE FROM task")
+    conn.commit()
+
 
 
 
