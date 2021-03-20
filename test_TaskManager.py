@@ -2,7 +2,6 @@ import TaskManager
 import Task
 import Action
 
-
 def test_createTaskWithTaskManagerWithNoTask() :
     taskManager = TaskManager.TaskManager([])
     assert taskManager.tasks == []
@@ -114,6 +113,37 @@ def test_deleteTask() :
         print(taskManager.tasks[task.id])
         taskManager.deleteTask(0)
         assert len(taskManager.tasks) == 0
+
+def test_UpdateTaskToDone() :
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input = "+ Watch the Synder's Cut"
+    action = taskManager.parseCommand(input)
+    assert action.type == "add"
+    if (action.type == "add") :
+        task = taskManager.createTask(nbTask,action)
+        assert task.id == 0
+        assert task.title == "Watch the Synder's Cut"
+        assert taskManager.tasks[task.id] == task
+        assert task.status is None
+        taskManager.changeTaskStatusToDone(task.id)
+        assert task.status == "Done"
+
+def test_UpdateTaskToDo() :
+    taskManager = TaskManager.TaskManager([])
+    nbTask = len(taskManager.tasks)
+    input = "+ I really have to do this one"
+    action = taskManager.parseCommand(input)
+    assert action.type == "add"
+    if (action.type == "add") :
+        task = taskManager.createTask(nbTask,action)
+        assert task.id == 0
+        assert task.title == "I really have to do this one"
+        assert taskManager.tasks[task.id] == task
+        assert task.status is None
+        taskManager.changeTaskStatusToDo(task.id)
+        assert task.status == "toDo"
+
 
 
 

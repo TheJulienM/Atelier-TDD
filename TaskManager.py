@@ -62,3 +62,15 @@ class TaskManager:
 
     def deleteTask(self,id):
         self.tasks.pop(id)
+
+    def changeTaskStatusToDone(self,id):
+        task = self.tasks[id]
+        task.changeStatusToDone()
+        # task.status = "Done"
+        # Les deux fonctionnent mais j'avais envie
+        # de faire une petite méthode dans ma class Task je la trouvais un peu vide
+
+    def changeTaskStatusToDo(self,id):
+        task = self.tasks[id]
+        task.changeStatusToDo()
+
