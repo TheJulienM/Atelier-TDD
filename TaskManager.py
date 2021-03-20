@@ -95,7 +95,8 @@ class TaskManager:
     def getTaskFromDatabase(self):
         tasksData = cur.execute("SELECT * FROM task")
         tasksData = tasksData.fetchall()
-        for taskRow in tasksData:
-            task = Task.Task(taskRow[0], taskRow[1])
-            task.status = taskRow[2]
-            self.tasks.append(task)
+        if len(tasksData) != 0 :
+            for taskRow in tasksData:
+                task = Task.Task(taskRow[0], taskRow[1])
+                task.status = taskRow[2]
+                self.tasks.append(task)
